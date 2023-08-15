@@ -1,71 +1,75 @@
 package managers;
 
+import utilities.Room;
 
 public class MapManager {
 	//for map size.
 	private final static int Y_Width = 8;
-	private final static int X_LENGTH = 5;
+	private final static int X_LENGTH = 8;
 	private final static int START_POINT = 0;
 	private final static int NUMBER_OF_TREASURE_ROOMS = X_LENGTH/4;
 	
 	//Map properties
-	private char [][] map;
-	private int yCoordinate;
-	private int xCoordinate;
+	private Room startRoom;
 	
+	//The Room the player is currently in
+	private Room currentRoom;
+	
+	//Boss Room Coordinates
+	private Room bossRoom;
+	
+	public byte[][] roomMapCoordinates = new byte[X_LENGTH][Y_Width];	
 	
 	
 	public MapManager() {
-		this.map = new char [X_LENGTH][Y_Width];
+		
 		populateMap();
 	}
 
-	public char[][] getMap() {
-		return map;
-	}
-
 	public void printMap() {
-		for(int i = 0; i < X_LENGTH; i++) {
-			for (int j = 0; j < Y_Width; j++) {
-				if (map[i][j] == '\0') {
-					map[i][j] = 'x';
-				}
-				System.out.print("[" + map[i][j] + "]");
-				
-			}
-			System.out.println("\n");
-		}
+	
 	}
 	
+	
+
+	
+
 	/*
 	 * This method will do a few main things
-	 * 1. It will generate 1 end point and a begin point
-	 * 2. A beginning point is always the corner [0][0]
-	 * 3. A end point is a random point within the plain
-	 * 4. There is only 1 true path
-	 * 5. It will choose a set amount of treasure rooms
-	 * 6. it will connect paths and room at random.
+	 * 1. Make a chain n long at random. Create rooms of n length connected from left to right.
+	 * 
 	 */
 	private void populateMap() {
-		int random_x = randomize();
-		int random_y = randomize(); 
-		this.map[random_x][random_y] = 'g';
-		this.map[START_POINT][START_POINT] = 's';
-		int i = 0;
-		while (i < NUMBER_OF_TREASURE_ROOMS) {
-			random_x = randomize();
-			random_y = randomize();
-			if (map[random_x][random_y] == '\0') {
-				map[random_x][random_y] = 't';
-				i++;
-			}
+		int length = randomizeX();
+		Room tempRoom;
+		startRoom = new Room(null, null, null, null, 0, 0);
+		currentRoom = startRoom;
+		for (int i = 1; i < length; i++) {
+			tempRoom = new Room(null, currentRoom, null, null, i, 0);
+			roomMapCoordinates[i][0] = 0;
+			currentRoom.setLeftRoom(tempRoom);
+			currentRoom = tempRoom;
+			
 		}
 		
 	}
 	
-	private int randomize() {
-		return (int)(Math.random() * X_LENGTH - 1);
+	
+	
+	
+	
+	
+	public Room getCurrentRoom() {
+		return currentRoom;
+	}
+
+	
+	
+	private int randomizeX() {
+		return (int)((Math.random() * X_LENGTH) + 4);
 	}
 				
-	
+	private int randomizeY() {
+		return (int)((Math.random() * Y_Width) + 4);
+	}
 }
