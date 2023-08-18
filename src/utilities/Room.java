@@ -4,75 +4,53 @@ import managers.MapManager;
 
 public class Room {
 	
+	private boolean hasRight;
+	private boolean hasLeft;
+	private boolean hasUp;
+	private boolean hasDown;
 	
 	
-	
-	private Room leftRoom;
-	private Room rightRoom;
-	private Room upRoom;
-	private Room downRoom;
-	private int yRoomCoordinate;
-	private int xRoomCoordinate;
-	
-	public Room(Room left, Room right, Room up, Room down, int x, int y) {
-		this.xRoomCoordinate = x;
-		this.yRoomCoordinate = y;
-		this.leftRoom = left;
-		this.rightRoom = right;
-		this.upRoom = up;
-		this.downRoom = down;
-	}
-	
-	
-	
-	
-	public Room getLeftRoom() {
-		return leftRoom;
+	public Room(boolean left, boolean right, boolean up, boolean down) {
+		this.hasRight = left;
+		this.hasLeft = right;
+		this.hasUp = up;
+		this.hasDown = down;
 	}
 
-	public void setLeftRoom(Room leftRoom) {
-		this.leftRoom = leftRoom;
-	}
-
-	public Room getRightRoom() {
-		return rightRoom;
-	}
-
-	public void setRightRoom(Room rightRoom) {
-		this.rightRoom = rightRoom;
-	}
-
-	public Room getUpRoom() {
-		return upRoom;
-	}
-
-	public void setUpRoom(Room upRoom) {
-		this.upRoom = upRoom;
-	}
-
-	public Room getDownRoom() {
-		return downRoom;
-	}
-
-	public void setDownRoom(Room downRoom) {
-		this.downRoom = downRoom;
-	}
-	
 	public boolean hasRight() {
-		return rightRoom != null;
+		return hasRight;
 	}
-	
-	public boolean hasleft() {
-		return leftRoom != null;
+
+	public void setRight(boolean hasRight) {
+		this.hasRight = hasRight;
 	}
-	
+
+	public boolean hasLeft() {
+		return hasLeft;
+	}
+
+	public void setLeft(boolean hasLeft) {
+		this.hasLeft = hasLeft;
+	}
+
 	public boolean hasUp() {
-		return upRoom != null;
+		return hasUp;
+	}
+
+	public void setUp(boolean hasUp) {
+		this.hasUp = hasUp;
+	}
+
+	public boolean isHasDown() {
+		return hasDown;
 	}
 	
-	public boolean hasDown() {
-		return downRoom != null;
+	public void setDown(boolean hasDown) {
+		this.hasDown = hasDown;
 	}
+	
+	
+
 	
 	
 }
