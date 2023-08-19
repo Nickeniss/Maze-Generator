@@ -1,5 +1,10 @@
 package managers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+
 import javax.print.attribute.standard.JobHoldUntil;
 import javax.sql.rowset.JoinRowSet;
 
@@ -7,10 +12,15 @@ import utilities.Room;
 
 public class MapManager {
 	// for map size.
-	private final static int Y_Width = 8;
-	private final static int X_LENGTH = 8;
-	private final static int START_POINT = 0;
+	private final static int Y_Width = 16;
+	private final static int X_LENGTH = 16;
+	
 	private final static int NUMBER_OF_TREASURE_ROOMS = X_LENGTH / 4;
+
+	//Map File path
+	private final static String MAP_FILE_PATH = "src/res/mapTest.txt";
+	private final File MAP_FILE = new File(MAP_FILE_PATH);
+	
 
 	// Map properties
 	private byte xStartCord;
@@ -24,7 +34,9 @@ public class MapManager {
 	private byte xBossCord;
 	private byte yBossCord;
 
-	public Room[][] roomMap = new Room[X_LENGTH][Y_Width];
+	private Room[][] roomMap = new Room[X_LENGTH][Y_Width];
+	
+	private int[][] roomFile = new int[X_LENGTH][Y_Width];
 
 	public MapManager() {
 
@@ -41,43 +53,41 @@ public class MapManager {
 	 * 
 	 */
 	private void populateMap() {
-		xStartCord = (byte) randomizeX();
-		yStartCord = (byte) randomizeY();
-		xBossCord = -1;
-		yBossCord = -1;
 		
-		while (xBossCord != xStartCord && yBossCord != xStartCord) {
-			xBossCord = (byte) randomizeX();
-			yBossCord = (byte) randomizeY();
+		try {
+			readRoomFile(MAP_FILE);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		generateRoom(xStartCord, yStartCord, xBossCord, yBossCord);
-
+		
+		 
+		
+		
+	}
 	
-	}
-
-	private void generateRoom(int xStartCord, int yStartCord, int xBossCord, int yBossCord) {
-
-		Room startRoom = new Room(false, false, false, false);
-		Room bossRoom = new Room(false, false, false, false);
-		System.out.println("x: " + xBossCord + " -- y:" + yBossCord);
-		roomMap[xStartCord][yStartCord] = startRoom;
-		roomMap[xBossCord][yBossCord] = bossRoom;
+	//Reads map file in Res.
+	private void readRoomFile(File file) throws IOException {
 		
-		xStartCord = 0;
-		yStartCord = 0;
-		//Minus 2 since we already have two rooms.
-		int totalRooms = X_LENGTH * Y_Width - 2;
-		
-		for (int i = 0; i < totalRooms; i++) {
-			
-			System.out.println("x: " + xStartCord++ + " -- y:" + yStartCord++);
+		int currentRow = 0;
+		if(file.exists()) {
+			Scanner fileReader = new Scanner(file);
+			while (fileReader.hasNext()) {
+				String currentLine = fileReader.nextLine();
+				String[] currentLineArray = currentLine.split(" ");
+				for(int i = 0; i < currentLineArray.length; i++) {
+					roomFile[i][currentRow] = Integer.parseInt(currentLineArray[i]);
+					
+				}
+				
+				currentRow++;
+			}
+			fileReader.close();
 		}
-
+		
+		
 	}
+	
 
-	private boolean canhavePath() {
-		return (randomizeX() >= X_LENGTH / 2);
-	}
 
 	private int randomizeX() {
 		return (int) ((Math.random() * X_LENGTH) - 1);
