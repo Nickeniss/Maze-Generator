@@ -56,11 +56,16 @@ public class MapManager {
 		
 		try {
 			readRoomFile(MAP_FILE);
+			createRoomMap();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		 
+		for (int i=0; i < X_LENGTH; i++) {
+			for (int j=0; j < Y_Width; j++) {
+				System.out.println("roomMap["+i+"]["+j+"]" + roomMap[i][j].toString());
+			}
+			}
 		
 		
 	}
@@ -87,6 +92,45 @@ public class MapManager {
 		
 	}
 	
+	private void createRoomMap() throws IOException{
+		
+		for (int i=0; i < X_LENGTH; i++) {
+			for (int j=0; j < Y_Width; j++) {
+				roomMap[i][j]= new Room(false,false,false,false);
+				if (roomFile[i][j] == 1) {	
+					//Check left
+					if (i > 0) {
+						if (roomFile[(i - 1)][j] == 1) {
+							roomMap[i][j].setLeft(true);
+						}
+					}
+					
+					//Check right
+					if(i < (X_LENGTH - 1)) {
+						if (roomFile[(i + 1)][j] == 1) {
+							roomMap[i][j].setRight(true);
+						}
+					}
+					
+					//Check up
+					if (j > 0) {
+						if (roomFile[i][(j - 1)] == 1) {
+							roomMap[i][j].setUp(true);
+						}
+					}
+					
+					//Check down
+					if(j < (Y_Width - 1)) {
+						if (roomFile[i][(j + 1)] == 1) {
+							roomMap[i][j].setDown(true);	
+						}
+					}	
+				}
+				
+				
+			}
+		}
+	}
 
 
 	private int randomizeX() {

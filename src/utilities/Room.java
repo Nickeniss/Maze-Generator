@@ -41,7 +41,7 @@ public class Room {
 		this.hasUp = hasUp;
 	}
 
-	public boolean isHasDown() {
+	public boolean hasDown() {
 		return hasDown;
 	}
 	
@@ -49,7 +49,11 @@ public class Room {
 		this.hasDown = hasDown;
 	}
 	
-	
+	@Override
+	public String toString() {
+		
+		return "\nLeft: " + hasLeft() + "\nRight: " + hasRight() + "\nUp: " + hasUp() + "\nDown: " + hasDown();
+	}
 
 	
 	
