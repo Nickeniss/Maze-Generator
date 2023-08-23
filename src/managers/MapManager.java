@@ -14,13 +14,12 @@ public class MapManager {
 	// for map size.
 	private final static int Y_Width = 16;
 	private final static int X_LENGTH = 16;
-	
+
 	private final static int NUMBER_OF_TREASURE_ROOMS = X_LENGTH / 4;
 
-	//Map File path
+	// Map File path
 	private final static String MAP_FILE_PATH = "src/res/mapTest.txt";
 	private final File MAP_FILE = new File(MAP_FILE_PATH);
-	
 
 	// Map properties
 	private byte xStartCord;
@@ -35,7 +34,7 @@ public class MapManager {
 	private byte yBossCord;
 
 	private Room[][] roomMap = new Room[X_LENGTH][Y_Width];
-	
+
 	private int[][] roomFile = new int[X_LENGTH][Y_Width];
 
 	public MapManager() {
@@ -53,85 +52,77 @@ public class MapManager {
 	 * 
 	 */
 	private void populateMap() {
-		
+
 		try {
 			readRoomFile(MAP_FILE);
 			createRoomMap();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		for (int i=0; i < X_LENGTH; i++) {
-			for (int j=0; j < Y_Width; j++) {
-				System.out.println("roomMap["+i+"]["+j+"]" + roomMap[i][j].toString());
+
+		for (int i = 0; i < X_LENGTH; i++) {
+			for (int j = 0; j < Y_Width; j++) {
+
+				System.out.println("roomMap[" + i + "][" + j + "]" + roomMap[i][j].toString());
 			}
-			}
-		
-		
+		}
+
 	}
-	
-	//Reads map file in Res.
+
+	// Reads map file in Res.
 	private void readRoomFile(File file) throws IOException {
-		
+
 		int currentRow = 0;
-		if(file.exists()) {
+		if (file.exists()) {
 			Scanner fileReader = new Scanner(file);
 			while (fileReader.hasNext()) {
 				String currentLine = fileReader.nextLine();
 				String[] currentLineArray = currentLine.split(" ");
-				for(int i = 0; i < currentLineArray.length; i++) {
-					roomFile[i][currentRow] = Integer.parseInt(currentLineArray[i]);
-					
+				for (int i = 0; i < currentLineArray.length; i++) {
+
+					roomFile[currentRow][i] = Integer.parseInt(currentLineArray[i]);
+
 				}
-				
+
 				currentRow++;
 			}
 			fileReader.close();
 		}
-		
-		
+
 	}
-	
-	private void createRoomMap() throws IOException{
-		
-		for (int i=0; i < X_LENGTH; i++) {
-			for (int j=0; j < Y_Width; j++) {
-				roomMap[i][j]= new Room(false,false,false,false);
-				if (roomFile[i][j] == 1) {	
-					//Check left
-					if (i > 0) {
-						if (roomFile[(i - 1)][j] == 1) {
-							roomMap[i][j].setLeft(true);
-						}
+
+	private void createRoomMap() throws IOException {
+
+		for (int i = 0; i < X_LENGTH; i++) {
+			for (int j = 0; j < Y_Width; j++) {
+				roomMap[i][j] = new Room();
+				if (roomFile[i][j] == 1) {
+
+					// Check left
+					if(j - 1 > 0) {
+						roomMap[i][j].setLeft(roomFile[i][j - 1] == 1);
 					}
 					
-					//Check right
-					if(i < (X_LENGTH - 1)) {
-						if (roomFile[(i + 1)][j] == 1) {
-							roomMap[i][j].setRight(true);
-						}
+					// Check right
+					if(j < (Y_Width - 1)) {
+						roomMap[i][j].setRight(roomFile[i][j + 1] == 1);
 					}
 					
-					//Check up
-					if (j > 0) {
-						if (roomFile[i][(j - 1)] == 1) {
-							roomMap[i][j].setUp(true);
-						}
+					// Check up
+					if(i - 1 > 0) {
+						roomMap[i][j].setUp(roomFile[i - 1][j] == 1);
 					}
 					
 					//Check down
-					if(j < (Y_Width - 1)) {
-						if (roomFile[i][(j + 1)] == 1) {
-							roomMap[i][j].setDown(true);	
-						}
-					}	
+					if(i < (X_LENGTH - 1)) {
+						roomMap[i][j].setDown(roomFile[i + 1][j] == 1);
+					}
+					
 				}
-				
-				
+
 			}
 		}
 	}
-
 
 	private int randomizeX() {
 		return (int) ((Math.random() * X_LENGTH) - 1);
