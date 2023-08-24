@@ -15,19 +15,17 @@ public class MapManager {
 	private final static int Y_Width = 16;
 	private final static int X_LENGTH = 16;
 
-	private final static int NUMBER_OF_TREASURE_ROOMS = X_LENGTH / 4;
-
 	// Map File path
 	private final static String MAP_FILE_PATH = "src/res/mapTest.txt";
 	private final File MAP_FILE = new File(MAP_FILE_PATH);
 
 	// Map properties
-	private byte xStartCord;
-	private byte yStartCord;
+	private byte xStartCord = 0;
+	private byte yStartCord = 0;
 
 	// The Room the player is currently in
-	private byte xCurrentCord;
-	private byte yCurrentCord;
+	private byte xCurrentCord = 0;
+	private byte yCurrentCord = 0;
 
 	// Boss Room Coordinates
 	private byte xBossCord;
@@ -36,9 +34,14 @@ public class MapManager {
 	private Room[][] roomMap = new Room[X_LENGTH][Y_Width];
 
 	private int[][] roomFile = new int[X_LENGTH][Y_Width];
+	
+	
+	//Basic Room type numbers for file reading
+	private final static byte BASIC_ROOM = 1;
+	private final static byte TREASURE_ROOM = 2;
+	private final static byte BOSS_ROOM = 3;
 
 	public MapManager() {
-
 		populateMap();
 	}
 
@@ -56,20 +59,20 @@ public class MapManager {
 		try {
 			readRoomFile(MAP_FILE);
 			createRoomMap();
-		} catch (IOException e) {
+		}  catch (IOException e) {
+			e.printStackTrace();
+		}  catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		for (int i = 0; i < X_LENGTH; i++) {
-			for (int j = 0; j < Y_Width; j++) {
-
-				System.out.println("roomMap[" + i + "][" + j + "]" + roomMap[i][j].toString());
-			}
-		}
-
 	}
 
-	// Reads map file in Res.
+	/**
+	 * While the file exists, it will split each line of the file by a " " space.
+	 * Then parsing it to the roomFile 2D Array
+	 * 
+	 * @param file - File to read from for 2d array
+	 * @throws IOException
+	 */
 	private void readRoomFile(File file) throws IOException {
 
 		int currentRow = 0;
@@ -91,44 +94,59 @@ public class MapManager {
 
 	}
 
+	/**
+	 * This function will iterate over the entire 2d array It will check the file
+	 * version at the current indexes and check whether it's a room that is
+	 * connectable. If true, then it will check all adjacent rooms to see which is
+	 * one it will connect to. Then set the correct side.
+	 * 
+	 * @throws IOException
+	 */
 	private void createRoomMap() throws IOException {
 
 		for (int i = 0; i < X_LENGTH; i++) {
 			for (int j = 0; j < Y_Width; j++) {
 				roomMap[i][j] = new Room();
-				if (roomFile[i][j] == 1) {
+				if (roomFile[i][j] >= BASIC_ROOM) {
 
 					// Check left
-					if(j - 1 > 0) {
-						roomMap[i][j].setLeft(roomFile[i][j - 1] == 1);
+					if (j - 1 > 0) {
+						roomMap[i][j].setLeft(roomFile[i][j - 1] >= BASIC_ROOM);
 					}
-					
+
 					// Check right
-					if(j < (Y_Width - 1)) {
-						roomMap[i][j].setRight(roomFile[i][j + 1] == 1);
+					if (j < (X_LENGTH - 1)) {
+						roomMap[i][j].setRight(roomFile[i][j + 1] >= BASIC_ROOM);
 					}
-					
+
 					// Check up
-					if(i - 1 > 0) {
-						roomMap[i][j].setUp(roomFile[i - 1][j] == 1);
+					if (i - 1 > 0) {
+						roomMap[i][j].setUp(roomFile[i - 1][j] >= BASIC_ROOM);
 					}
-					
-					//Check down
-					if(i < (X_LENGTH - 1)) {
-						roomMap[i][j].setDown(roomFile[i + 1][j] == 1);
+
+					// Check down
+					if (i < (Y_Width - 1)) {
+						roomMap[i][j].setDown(roomFile[i + 1][j] >= BASIC_ROOM);
 					}
-					
+
+				}
+				
+				
+				if (roomFile[i][j] == BOSS_ROOM) {
+					xBossCord = (byte)j;
+					yBossCord = (byte)i;
 				}
 
 			}
 		}
 	}
-
-	private int randomizeX() {
-		return (int) ((Math.random() * X_LENGTH) - 1);
+		
+	
+	
+	
+	private byte randomize(int length) {
+		return (byte) ((Math.random() * length) + 3);
 	}
 
-	private int randomizeY() {
-		return (int) ((Math.random() * Y_Width) - 1);
-	}
+	
 }
