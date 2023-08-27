@@ -40,7 +40,9 @@ public class MapManager {
 	private final static byte BASIC_ROOM = 1;
 	private final static byte TREASURE_ROOM = 2;
 	private final static byte BOSS_ROOM = 3;
-
+	
+	
+	
 	public MapManager() {
 		populateMap();
 	}
@@ -131,10 +133,14 @@ public class MapManager {
 
 				}
 				
-				
+				//Check if it's a boss room
 				if (roomFile[i][j] == BOSS_ROOM) {
 					xBossCord = (byte)j;
 					yBossCord = (byte)i;
+				}
+				//Check if it's a treasure room
+				else if (roomFile[i][j] == TREASURE_ROOM) {
+					roomMap[i][j].setTreasure(true);
 				}
 
 			}

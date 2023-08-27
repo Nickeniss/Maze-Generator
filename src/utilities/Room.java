@@ -8,7 +8,7 @@ public class Room {
 	private boolean hasLeft;
 	private boolean hasUp;
 	private boolean hasDown;
-	
+	private boolean hasTreasure;
 	
 	public Room(boolean left, boolean right, boolean up, boolean down) {
 		this.hasRight = left;
@@ -22,7 +22,7 @@ public class Room {
 		this.hasLeft = false;
 		this.hasUp = false;
 		this.hasDown = false;
-		
+		this.hasTreasure = false;
 	}
 
 	public boolean hasRight() {
@@ -45,6 +45,15 @@ public class Room {
 		return hasUp;
 	}
 
+	
+	public void setTreasure(boolean hasTreasure) {
+		this.hasTreasure = hasTreasure;
+	}
+
+	public boolean hasTreasure() {
+		return hasTreasure;
+	}  
+	
 	public void setUp(boolean hasUp) {
 		this.hasUp = hasUp;
 	}
